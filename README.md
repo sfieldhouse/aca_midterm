@@ -3,6 +3,15 @@
 Midterm project: ISA-level evaluation of custom RISC-V instructions for
 quantized CNN inference.
 
+The key point of our ISA based optimizations here is to realize that many convolutional neural networks use ReLU as an activation function. As a result of this, they have a large amount
+of 0s in the activations. These are actually operations which could be skipped, if the underlying architecture could take advantage of it. So, in this project, we present two ISA optimizations,
+first is the xqmac8 which is a packed INT8 multiply-accumulate instruction. In addition to this, we introduce xsqmac8 which is a sparse MAC command, which can take advantage of 0s in the 
+model's activations to skip calculations.
+
+Then, to we use hardware-software codesign, to increase the gain we get from using xsqmac8 even further by taking inspiration from a paper called "Inducing and Exploiting Activation Sparsity
+for Fast Inference on Deep Neural Networks" by Kurtz et al, PMLR 2020. They show you can use something called Hoyer loss to increase the sparsity of a model without affecting the accuracy. So we fine
+tune our model with hoyer loss to increase sparsity, and show that the higher sparsity model paired with xsqmac8 can obtain an even better performance. Our results are presented below.
+
 * **Workload:** ResNet-18 (ImageNet, 1.81 GMAC) from Hugging Face
   (`timm/resnet18.tv_in1k`), quantized to **INT8 weights / 8-bit activations**,
   running bare-metal on **RV64IMC** in **Spike**.

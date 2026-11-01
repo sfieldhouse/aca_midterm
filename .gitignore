@@ -8,3 +8,4 @@ models/
 # spike raw histograms are large
 results/raw/**/*.hist
 results/raw/**/*.err
+literature/*
