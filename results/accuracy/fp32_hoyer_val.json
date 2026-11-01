@@ -1,0 +1,7 @@
+{
+ "ckpt": "models/hoyer/model.pt",
+ "split": "val",
+ "top1": 0.70124,
+ "top5": 0.894,
+ "loss": 1.2147508294677734
+}

@@ -1,0 +1,27 @@
+== 1. Xqnn instruction tests
+    xqmac8/xqmac8u: 40590 checks, 0 fails
+    xrequant: 63207 checks, 0 fails
+    xsqmac8/xsaccrd/xsaccclr: 1508 checks, 0 fails
+    TOTAL 105305 checks, 0 fails -> PASS
+  [PASS] spike
+  [PASS] native emulation
+== 2. Conv kernel tests
+  [PASS] kernels B0
+  [PASS] kernels B1
+  [PASS] kernels X1
+  [PASS] kernels X2
+  [PASS] kernels S0
+  [PASS] kernels S1
+  [PASS] kernels S2
+  [PASS] kernels S2g2
+  [PASS] kernels S2g4
+  [PASS] kernels S2g16
+== 3. Full-model golden check (sparse model, 1 image, all configs)
+  [PASS] B0: RESULT PASS images 1 total_instret 13352285955
+  [PASS] B1: RESULT PASS images 1 total_instret 5430190865
+  [PASS] X1: RESULT PASS images 1 total_instret 587847233
+  [PASS] X2: RESULT PASS images 1 total_instret 553663046
+  [PASS] S0: RESULT PASS images 1 total_instret 2334780669
+  [PASS] S1: RESULT PASS images 1 total_instret 787791409
+  [PASS] S2: RESULT PASS images 1 total_instret 282442923
+ALL TESTS PASSED

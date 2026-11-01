@@ -1,0 +1,71 @@
+IMG 0 instret 841803522 pred 838 label 720 golden OK
+OP conv1 537828047
+OP maxpool 8523512
+OP csr:layer1.0.conv1 2361229
+OP layer1.0.conv1 33567553
+OP csr:layer1.0.conv2 1927098
+OP layer1.0.conv2 26276811
+OP add:layer1.0 4416242
+OP csr:layer1.1.conv1 2412516
+OP layer1.1.conv1 34544371
+OP csr:layer1.1.conv2 1681048
+OP layer1.1.conv2 21401338
+OP add:layer1.1 4416233
+OP csr:layer2.0.conv1 2319887
+OP layer2.0.conv1 16403662
+OP csr:layer2.0.downsample.0 1
+OP layer2.0.downsample.0 3908382
+OP csr:layer2.0.conv2 778604
+OP layer2.0.conv2 17155415
+OP add:layer2.0 2208164
+OP csr:layer2.1.conv1 886000
+OP layer2.1.conv1 20585782
+OP csr:layer2.1.conv2 563036
+OP layer2.1.conv2 11255843
+OP add:layer2.1 2208134
+OP csr:layer3.0.conv1 884079
+OP layer3.0.conv1 10152130
+OP csr:layer3.0.downsample.0 1
+OP layer3.0.downsample.0 2205628
+OP csr:layer3.0.conv2 365281
+OP layer3.0.conv2 13598519
+OP add:layer3.0 1104096
+OP csr:layer3.1.conv1 408216
+OP layer3.1.conv1 16155335
+OP csr:layer3.1.conv2 237434
+OP layer3.1.conv2 7389491
+OP add:layer3.1 1104080
+OP csr:layer4.0.conv1 414407
+OP layer4.0.conv1 8128423
+OP csr:layer4.0.downsample.0 1
+OP layer4.0.downsample.0 1546482
+OP csr:layer4.0.conv2 109927
+OP layer4.0.conv2 5551218
+OP add:layer4.0 552062
+OP csr:layer4.1.conv1 123286
+OP layer4.1.conv1 6578355
+OP csr:layer4.1.conv2 98030
+OP layer4.1.conv2 4819410
+OP add:layer4.1 552053
+OP avgpool 152107
+OP fc 1734278
+NNZ 1 154095 200704
+NNZ 2 114944 200704
+NNZ 3 159366 200704
+NNZ 4 89038 200704
+NNZ 5 150505 200704
+NNZ 6 150505 200704
+NNZ 7 41002 100352
+NNZ 8 50558 100352
+NNZ 9 24682 100352
+NNZ 10 50033 100352
+NNZ 11 50033 100352
+NNZ 12 18507 50176
+NNZ 13 22026 50176
+NNZ 14 9448 50176
+NNZ 15 22465 50176
+NNZ 16 22465 50176
+NNZ 17 4269 25088
+NNZ 18 5028 25088
+NNZ 19 3748 25088
+RESULT PASS images 1 total_instret 841803522

@@ -1,0 +1,33 @@
+IMG 0 instret 553663046 pred 838 label 720 golden OK
+OP conv1 57457860
+OP maxpool 8417069
+OP layer1.0.conv1 33138181
+OP layer1.0.conv2 33138181
+OP add:layer1.0 2810600
+OP layer1.1.conv1 33138181
+OP layer1.1.conv2 33138181
+OP add:layer1.1 2810600
+OP layer2.0.conv1 16547957
+OP layer2.0.downsample.0 2573941
+OP layer2.0.conv2 31901813
+OP add:layer2.0 1405338
+OP layer2.1.conv1 31901813
+OP layer2.1.conv2 31901813
+OP add:layer2.1 1405308
+OP layer3.0.conv1 15945649
+OP layer3.0.downsample.0 2134705
+OP layer3.0.conv2 31299505
+OP add:layer3.0 702678
+OP layer3.1.conv1 31299505
+OP layer3.1.conv2 31299505
+OP add:layer3.1 702662
+OP layer4.0.conv1 16601157
+OP layer4.0.downsample.0 2031173
+OP layer4.0.conv2 32895045
+OP add:layer4.0 351348
+OP layer4.1.conv1 32895045
+OP layer4.1.conv2 32895045
+OP add:layer4.1 351339
+OP avgpool 148509
+OP fc 214276
+RESULT PASS images 1 total_instret 553663046

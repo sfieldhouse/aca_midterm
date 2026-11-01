@@ -1,0 +1,19 @@
+{
+ "act_stem": 0.0217,
+ "layer1.0.act1": 0.0889,
+ "layer1.0.act2": 0.0874,
+ "layer1.1.act1": 0.0996,
+ "layer1.1.act2": 0.1147,
+ "layer2.0.act1": 0.0605,
+ "layer2.0.act2": 0.1436,
+ "layer2.1.act1": 0.0669,
+ "layer2.1.act2": 0.125,
+ "layer3.0.act1": 0.1099,
+ "layer3.0.act2": 0.125,
+ "layer3.1.act1": 0.0601,
+ "layer3.1.act2": 0.1074,
+ "layer4.0.act1": 0.0693,
+ "layer4.0.act2": 0.1797,
+ "layer4.1.act1": 0.0952,
+ "layer4.1.act2": 0.0
+}

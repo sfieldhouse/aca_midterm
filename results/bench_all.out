@@ -1,0 +1,91 @@
+building 50 configurations ...
+  done dense  S2_n1_g8_d1001         mix rc=0
+  done dense  X2_n1_g8_d1001         mix rc=0
+  done dense  X1_n1_g8_d1001         mix rc=0
+  done sparse S2_n8_g8_d1001         rc=0
+  done dense  S2_n8_g8_d900          rc=0
+  done dense  S2_n8_g4_d1001         rc=0
+  done dense  S2_n8_g8_d1001         rc=0
+  done dense  S2_n8_g8_d700          rc=0
+  done dense  S2_n8_g16_d1001        rc=0
+  done dense  S2_n8_g8_d800          rc=0
+  done dense  S2_n8_g8_d600          rc=0
+  done dense  S2_n8_g8_d500          rc=0
+  done dense  S1_n1_g8_d1001         mix rc=0
+  done sparse S2_n1_g8_d1001         mix rc=0
+  done dense  S2_n8_g2_d1001         rc=0
+  done sparse X2_n1_g8_d1001         mix rc=0
+  done dense  S1_n8_g4_d1001         rc=0
+  done sparse X1_n1_g8_d1001         mix rc=0
+  done sparse S1_n8_g8_d1001         rc=0
+  done dense  S1_n8_g8_d1001         rc=0
+  done dense  S1_n8_g16_d1001        rc=0
+  done sparse X2_n8_g8_d1001         rc=0
+  done sparse S1_n1_g8_d1001         mix rc=0
+  done sparse X1_n8_g8_d1001         rc=0
+  done dense  X1_n8_g8_d1001         rc=0
+  done sparse S2_n8_g4_d1001         rc=0
+  done sparse S2_n8_g16_d1001        rc=0
+  done dense  X2_n8_g8_d1001         rc=0
+  done sparse S2_n8_g2_d1001         rc=0
+  done sparse S2_n8_g8_d700          rc=0
+  done sparse S2_n8_g8_d600          rc=0
+  done dense  S1_n8_g2_d1001         rc=0
+  done sparse S2_n8_g8_d900          rc=0
+  done sparse S2_n8_g8_d800          rc=0
+  done sparse S2_n8_g8_d500          rc=0
+  done sparse S1_n8_g4_d1001         rc=0
+  done sparse S1_n8_g16_d1001        rc=0
+  done sparse S1_n8_g2_d1001         rc=0
+  done sparse S0_n1_g8_d1001         mix rc=0
+  done dense  S0_n1_g8_d1001         mix rc=0
+  done sparse S0_n8_g8_d1001         rc=0
+  done dense  S0_n8_g8_d1001         rc=0
+  done dense  B1_n1_g8_d1001         mix rc=0
+  done sparse B1_n1_g8_d1001         mix rc=0
+  done sparse B1_n8_g8_d1001         rc=0
+  done dense  B1_n8_g8_d1001         rc=0
+  done dense  B0_n1_g8_d1001         mix rc=0
+  done sparse B0_n1_g8_d1001         mix rc=0
+  done dense  B0_n8_g8_d1001         rc=0
+  done sparse B0_n8_g8_d1001         rc=0
+wrote /home/zeshan/projects/aca/results/benchmarks.csv
+wrote /home/zeshan/projects/aca/results/ops.csv
+wrote /home/zeshan/projects/aca/results/sparsity_runtime.csv
+wrote /home/zeshan/projects/aca/results/mix.csv
+dense  B0 g8  d1001 13,350,662,624 instr/img MAC/instr  0.136  PASS
+dense  B1 g8  d1001  5,428,567,534 instr/img MAC/instr  0.334  PASS
+dense  X1 g8  d1001    586,223,902 instr/img MAC/instr  3.095  PASS
+dense  X2 g8  d1001    553,753,368 instr/img MAC/instr  3.276  PASS
+dense  S0 g8  d1001  2,906,983,935 instr/img MAC/instr  0.624  PASS
+dense  S1 g2  d1001  1,016,510,335 instr/img MAC/instr  1.785  PASS
+dense  S1 g4  d1001    901,092,847 instr/img MAC/instr  2.013  PASS
+dense  S1 g8  d1001    844,190,133 instr/img MAC/instr  2.149  PASS
+dense  S1 g16 d1001    828,316,547 instr/img MAC/instr  2.190  PASS
+dense  S2 g2  d1001    511,368,390 instr/img MAC/instr  3.547  PASS
+dense  S2 g4  d1001    397,529,600 instr/img MAC/instr  4.563  PASS
+dense  S2 g8  d500     361,063,650 instr/img MAC/instr  5.024  PASS
+dense  S2 g8  d600     346,229,818 instr/img MAC/instr  5.240  PASS
+dense  S2 g8  d700     343,170,513 instr/img MAC/instr  5.286  PASS
+dense  S2 g8  d800     340,387,240 instr/img MAC/instr  5.329  PASS
+dense  S2 g8  d900     340,555,299 instr/img MAC/instr  5.327  PASS
+dense  S2 g8  d1001    340,555,299 instr/img MAC/instr  5.327  PASS
+dense  S2 g16 d1001    324,740,055 instr/img MAC/instr  5.586  PASS
+sparse B0 g8  d1001 13,352,271,288 instr/img MAC/instr  0.136  PASS
+sparse B1 g8  d1001  5,430,176,198 instr/img MAC/instr  0.334  PASS
+sparse X1 g8  d1001    587,832,566 instr/img MAC/instr  3.086  PASS
+sparse X2 g8  d1001    553,647,066 instr/img MAC/instr  3.277  PASS
+sparse S0 g8  d1001  2,310,107,812 instr/img MAC/instr  0.785  PASS
+sparse S1 g2  d1001    916,161,534 instr/img MAC/instr  1.980  PASS
+sparse S1 g4  d1001    828,328,898 instr/img MAC/instr  2.190  PASS
+sparse S1 g8  d1001    785,218,609 instr/img MAC/instr  2.310  PASS
+sparse S1 g16 d1001    773,514,722 instr/img MAC/instr  2.345  PASS
+sparse S2 g2  d1001    409,304,624 instr/img MAC/instr  4.432  PASS
+sparse S2 g4  d1001    323,050,685 instr/img MAC/instr  5.615  PASS
+sparse S2 g8  d500     302,941,930 instr/img MAC/instr  5.988  PASS
+sparse S2 g8  d600     288,349,122 instr/img MAC/instr  6.291  PASS
+sparse S2 g8  d700     279,868,810 instr/img MAC/instr  6.482  PASS
+sparse S2 g8  d800     279,868,810 instr/img MAC/instr  6.482  PASS
+sparse S2 g8  d900     279,868,810 instr/img MAC/instr  6.482  PASS
+sparse S2 g8  d1001    279,868,810 instr/img MAC/instr  6.482  PASS
+sparse S2 g16 d1001    268,223,265 instr/img MAC/instr  6.763  PASS

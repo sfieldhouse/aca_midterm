@@ -1,0 +1,6 @@
+exported 20 convs, blob 34.6 MB, 1000 images -> models/sparse/export_check1000
+sparse B1: RESULT PASS images 1000 total_instret 0
+sparse X2: RESULT PASS images 1000 total_instret 0
+sparse S0: RESULT PASS images 1000 total_instret 0
+sparse S1: RESULT PASS images 1000 total_instret 0
+sparse S2: RESULT PASS images 1000 total_instret 0

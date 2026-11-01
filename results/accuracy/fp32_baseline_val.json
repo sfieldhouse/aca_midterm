@@ -1,0 +1,7 @@
+{
+ "ckpt": "models/resnet18_tv_in1k.safetensors",
+ "split": "val",
+ "top1": 0.69762,
+ "top5": 0.89068,
+ "loss": 1.2473069844055176
+}

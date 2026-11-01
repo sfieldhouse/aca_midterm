@@ -1,0 +1,7 @@
+{
+ "ckpt": "models/sparse/model.pt",
+ "split": "val",
+ "top1": 0.69552,
+ "top5": 0.89072,
+ "loss": 1.2414459300231933
+}

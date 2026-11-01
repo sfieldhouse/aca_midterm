@@ -1,0 +1,78 @@
+IMG 0 instret 841803521 pred 838 label 720 golden OK
+IMG 1 instret 846072260 pred 801 label 983 golden OK
+IMG 2 instret 841879376 pred 756 label 756 golden OK
+IMG 3 instret 847263757 pred 226 label 226 golden OK
+IMG 4 instret 839540503 pred 121 label 121 golden OK
+IMG 5 instret 854440883 pred 338 label 338 golden OK
+IMG 6 instret 844949872 pred 725 label 725 golden OK
+IMG 7 instret 837570889 pred 981 label 560 golden OK
+OP conv1 4302652052
+OP maxpool 68059134
+OP csr:layer1.0.conv1 18860303
+OP layer1.0.conv1 268380315
+OP csr:layer1.0.conv2 15553663
+OP layer1.0.conv2 214199574
+OP add:layer1.0 35329918
+OP csr:layer1.1.conv1 19308248
+OP layer1.1.conv1 277021410
+OP csr:layer1.1.conv2 13811345
+OP layer1.1.conv2 178048149
+OP add:layer1.1 35329882
+OP csr:layer2.0.conv1 18523183
+OP layer2.0.conv1 131329135
+OP csr:layer2.0.downsample.0 8
+OP layer2.0.downsample.0 31253850
+OP csr:layer2.0.conv2 6194863
+OP layer2.0.conv2 136136791
+OP add:layer2.0 17665312
+OP csr:layer2.1.conv1 7066346
+OP layer2.1.conv1 163948753
+OP csr:layer2.1.conv2 4457654
+OP layer2.1.conv2 88682372
+OP add:layer2.1 17665066
+OP csr:layer3.0.conv1 7012846
+OP layer3.0.conv1 80239650
+OP csr:layer3.0.downsample.0 8
+OP layer3.0.downsample.0 17537589
+OP csr:layer3.0.conv2 2836550
+OP layer3.0.conv2 104374046
+OP add:layer3.0 8832765
+OP csr:layer3.1.conv1 3283143
+OP layer3.1.conv1 130754533
+OP csr:layer3.1.conv2 1935667
+OP layer3.1.conv2 60947473
+OP add:layer3.1 8832640
+OP csr:layer4.0.conv1 3252232
+OP layer4.0.conv1 63870665
+OP csr:layer4.0.downsample.0 8
+OP layer4.0.downsample.0 12225196
+OP csr:layer4.0.conv2 918327
+OP layer4.0.conv2 47933882
+OP add:layer4.0 4416496
+OP csr:layer4.1.conv1 980439
+OP layer4.1.conv1 53491311
+OP csr:layer4.1.conv2 914661
+OP layer4.1.conv2 48263832
+OP add:layer4.1 4416424
+OP avgpool 1216856
+OP fc 13874224
+NNZ 1 1231355 1605632
+NNZ 2 940023 1605632
+NNZ 3 1278152 1605632
+NNZ 4 748713 1605632
+NNZ 5 1204511 1605632
+NNZ 6 1204511 1605632
+NNZ 7 325019 802816
+NNZ 8 402186 802816
+NNZ 9 193766 802816
+NNZ 10 394962 802816
+NNZ 11 394962 802816
+NNZ 12 141934 401408
+NNZ 13 178083 401408
+NNZ 14 78367 401408
+NNZ 15 175212 401408
+NNZ 16 175212 401408
+NNZ 17 36535 200704
+NNZ 18 40311 200704
+NNZ 19 37137 200704
+RESULT PASS images 8 total_instret 6753521061

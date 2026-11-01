@@ -1,0 +1,177 @@
+"""Export an integer ResNet-18 (from quantize.py) to static C data for bare metal.
+
+Writes into --out:
+  model.bin      weights / biases / requant params (all layouts), 64-B aligned
+  model_desc.c   descriptor tables (conv_desc_t etc., see src/nn/nn.h)
+  images.bin     N pre-padded int8 stem inputs [230][232][4]
+  golden.bin     N x 1000 int32 logits from the bit-exact Python reference
+  inputs.c       g_nimg, g_labels[]
+  blob.S         .incbin of the three binaries
+  meta.json      per-layer MACs, shapes, scales, thresholds, image ids
+"""
+import argparse
+import json
+import os
+import sys
+
+import numpy as np
+import torch
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from quantize import BLOCKS, QRunner, quantize_input  # noqa: E402
+from data import imagenet_val  # noqa: E402
+
+
+def xrq_word(M, sh, zp, T, mode):
+    return (int(M) & 0xFFFFFFFF) | ((int(sh) & 63) << 32) | ((int(zp) & 0xFF) << 40) | \
+           ((int(T) & 0xFF) << 48) | ((int(mode) & 3) << 56)
+
+
+class Blob:
+    def __init__(self):
+        self.buf = bytearray()
+
+    def add(self, arr):
+        while len(self.buf) % 64:
+            self.buf.append(0)
+        off = len(self.buf)
+        self.buf += np.ascontiguousarray(arr).tobytes()
+        return off
+
+
+def conv_order():
+    out = ["conv1"]
+    for b in BLOCKS:
+        out.append(f"{b}.conv1")
+        if b.endswith(".0") and b != "layer1.0":
+            out.append(f"{b}.downsample.0")
+        out.append(f"{b}.conv2")
+    return out
+
+
+def pad_image(xq):
+    """int64 [3,224,224] -> int8 [230][232][4] (pad 3 each side, width to 232, channel 4 = 0)."""
+    img = np.zeros((230, 232, 4), np.int8)
+    img[3:227, 3:227, :3] = xq.permute(1, 2, 0).numpy().astype(np.int8)
+    return img
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("qmodel")
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--nimg", type=int, default=16)
+    ap.add_argument("--seed", type=int, default=0)
+    a = ap.parse_args()
+    os.makedirs(a.out, exist_ok=True)
+    q = torch.load(a.qmodel, weights_only=False)
+    blob = Blob()
+    descs, meta_layers = [], []
+    hw = {"conv1": (224, 112)}
+    s = 56
+    for b in BLOCKS:
+        li = int(b[5])
+        so = {1: 56, 2: 28, 3: 14, 4: 7}[li]
+        hw[f"{b}.conv1"] = (s, so)
+        hw[f"{b}.downsample.0"] = (s, so)
+        hw[f"{b}.conv2"] = (so, so)
+        s = so
+
+    for name in conv_order():
+        c = q["convs"][name]
+        w = c["w"].numpy().astype(np.int8)          # [oc, ic, k, k]
+        oc, ic, k, _ = w.shape
+        ih, oh = hw[name]
+        stem = name == "conv1"
+        if stem:
+            wp = np.zeros((oc, k, 8, 4), np.int8)   # [oc][kh][kw 8][ic 4]
+            wp[:, :, :7, :3] = w.transpose(0, 2, 3, 1)
+            icp, kwp, rowpix, off = 4, 8, 232, 0
+        else:
+            wp = w.transpose(0, 2, 3, 1).copy()     # [oc][kh][kw][ic]
+            icp, kwp, rowpix, off = ic, k, ih + 2, 1 - c["pad"]
+        L = kwp * icp
+        w_naive = wp.reshape(oc, k, L)
+        w_blk = w_naive.reshape(oc // 4, 4, k, L // 8, 8).transpose(0, 2, 3, 1, 4)
+        d = dict(name=name, ic=icp, oc=oc, ih=ih, iw=ih, oh=oh, ow=oh, k=k, stride=c["stride"], pad=c["pad"],
+                 kwp=kwp, L=L, in_rowpix=rowpix, in_off=off, mode=c["mode"], T=c["T"], in_signed=int(stem))
+        d["w_naive"] = blob.add(w_naive)
+        d["w_blk"] = blob.add(w_blk)
+        d["w_sp"] = 0 if stem else blob.add(w.transpose(2, 3, 1, 0))   # [kh][kw][ic][oc]
+        M, sh = c["M"].numpy(), c["sh"].numpy()
+        d["bias"] = blob.add(c["bias"].numpy().astype(np.int32))
+        d["mult"] = blob.add(M.astype(np.int32))
+        d["shift"] = blob.add(sh.astype(np.int32))
+        d["rqw"] = blob.add(np.array([xrq_word(M[i], sh[i], 0, c["T"], c["mode"]) for i in range(oc)], np.uint64))
+        assert np.all(np.abs(c["bias"].numpy()) < 2 ** 31) and np.all(M < 2 ** 31)
+        descs.append(d)
+        meta_layers.append(dict(name=name, ic=ic, oc=oc, k=k, stride=c["stride"], ih=ih, oh=oh,
+                                macs=int(oh * oh * oc * k * k * ic), T=c["T"], mode=c["mode"]))
+
+    adds = []
+    for b in BLOCKS:
+        ad = q["adds"][b]
+        so = hw[f"{b}.conv2"][1]
+        oc = q["convs"][f"{b}.conv2"]["w"].shape[0]
+        adds.append(dict(h=so, w=so, c=oc, A=ad["A"], B=ad["B"], k=ad["k"], T=ad["T"],
+                         res_signed=int(f"{b}.downsample.0" in q["convs"]),
+                         rqw=xrq_word(1, ad["k"], 0, ad["T"], 1)))
+    pool = dict(M=q["pool"]["M"], sh=q["pool"]["sh"], rqw=xrq_word(q["pool"]["M"], q["pool"]["sh"], 0, 0, 1))
+    fw = q["fc"]["w"].numpy().astype(np.int8)
+    fcd = dict(inp=512, out=1000, w_naive=blob.add(fw),
+               w_blk=blob.add(fw.reshape(250, 4, 64, 8).transpose(0, 2, 1, 3)),
+               bias=blob.add(q["fc"]["bias"].numpy().astype(np.int32)))
+    open(os.path.join(a.out, "model.bin"), "wb").write(bytes(blob.buf))
+
+    # ---------------- descriptor C file
+    L = ['// generated by python/export_c.py -- do not edit', '#include "nn.h"', '',
+         'const conv_desc_t g_convs[20] = {']
+    for d in descs:
+        L.append('  {"%s", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, '
+                 '%du, %du, %du, %du, %du, %du, %du},' % (
+                     d["name"], d["ic"], d["oc"], d["ih"], d["iw"], d["oh"], d["ow"], d["k"], d["stride"],
+                     d["pad"], d["kwp"], d["L"], d["in_rowpix"], d["in_off"], d["mode"], d["T"], d["in_signed"],
+                     d["w_naive"], d["w_blk"], d["w_sp"], d["bias"], d["mult"], d["shift"], d["rqw"]))
+    L.append('};')
+    L.append('const add_desc_t g_adds[8] = {')
+    for ad in adds:
+        L.append('  {%d, %d, %d, %d, %d, %d, %d, %d, 0x%016xull},' % (
+            ad["h"], ad["w"], ad["c"], ad["A"], ad["B"], ad["k"], ad["T"], ad["res_signed"], ad["rqw"]))
+    L.append('};')
+    L.append('const pool_desc_t g_pool = {%d, %d, 0x%016xull};' % (pool["M"], pool["sh"], pool["rqw"]))
+    L.append('const fc_desc_t g_fc = {%d, %d, %du, %du, %du};' % (512, 1000, fcd["w_naive"], fcd["w_blk"], fcd["bias"]))
+    open(os.path.join(a.out, "model_desc.c"), "w").write("\n".join(L) + "\n")
+
+    # ---------------- images + golden logits
+    ds = imagenet_val()
+    g = torch.Generator().manual_seed(a.seed)
+    ids = torch.randperm(len(ds), generator=g)[: a.nimg].tolist()
+    run = QRunner(q)
+    imgs, gold, labels = [], [], []
+    for i in ids:
+        x, y = ds[i]
+        xq = quantize_input(x[None], q)[0]
+        lg = run(xq[None])[0].cpu().numpy()
+        assert np.all(np.abs(lg) < 2 ** 31)
+        imgs.append(pad_image(xq))
+        gold.append(lg.astype(np.int32))
+        labels.append(y)
+    np.stack(imgs).tofile(os.path.join(a.out, "images.bin"))
+    np.stack(gold).tofile(os.path.join(a.out, "golden.bin"))
+    open(os.path.join(a.out, "inputs.c"), "w").write(
+        "// generated by python/export_c.py\nconst int g_nimg = %d;\nconst int g_labels[%d] = {%s};\n" % (
+            len(ids), len(ids), ", ".join(map(str, labels))))
+    ab = os.path.abspath(a.out)
+    open(os.path.join(a.out, "blob.S"), "w").write(
+        "  .section .rodata\n  .balign 64\n  .globl model_bin\nmodel_bin:\n  .incbin \"%s/model.bin\"\n"
+        "  .balign 64\n  .globl images_bin\nimages_bin:\n  .incbin \"%s/images.bin\"\n"
+        "  .balign 64\n  .globl golden_bin\ngolden_bin:\n  .incbin \"%s/golden.bin\"\n" % (ab, ab, ab))
+    meta = dict(qmodel=a.qmodel, image_ids=ids, labels=labels, layers=meta_layers,
+                golden_top1=[int(np.argmax(gg)) for gg in gold], blob_bytes=len(blob.buf),
+                total_macs=sum(l["macs"] for l in meta_layers) + 512 * 1000)
+    json.dump(meta, open(os.path.join(a.out, "meta.json"), "w"), indent=1)
+    print(f"exported {len(descs)} convs, blob {len(blob.buf) / 1e6:.1f} MB, {len(ids)} images -> {a.out}")
+
+
+if __name__ == "__main__":
+    main()
