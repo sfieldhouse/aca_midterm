@@ -83,7 +83,9 @@ src/nn/            kernels.c (all kernel variants), model.c (ResNet-18 graph), m
                    xqnn.h (inline-asm wrappers + C emulation), nn.h
 src/tests/         test_xqnn.c (instruction tests), test_kernels.c (kernel tests)
 scripts/           setup_toolchain.sh, build_spike.sh, train_sparse.sh, run_tests.sh,
-                   check_native.sh, run_benchmarks.py, make_figures.py, reproduce_all.sh
+                   check_native.sh, run_benchmarks.py, make_figures.py, make_isa_diagram.py,
+                   reproduce_all.sh
+docs/              xqmac8_xsqmac8.pdf — one-page diagram of the two MAC instructions
 third_party/       riscv-isa-sim (Spike) — git submodule, pinned commit
 results/           accuracy/, sparsity/, sensitivity/, raw/ (Spike logs), *.csv,
                    figures/, summary.md

@@ -48,6 +48,8 @@ static struct {
 static inline void write_rd(processor_t* p, insn_t insn, int64_t v)
 {
   p->get_state()->XPR.write(insn.rd(), (reg_t)v);  // writes to x0 are discarded by XPR
+  if (p->get_log_commits_enabled())                  // show the write in --log-commits traces
+    p->get_state()->log_reg_write[insn.rd() << 4] = {(reg_t)v, 0};
 }
 
 static int xqnn_ngrp()

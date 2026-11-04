@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build Spike (third_party/riscv-isa-sim, pinned) with the Xqnn custom extension
 # (src/spike_ext/xqnn.cc) linked statically into the spike binary, and install
-# it into tools/spike.  Use:  spike --isa=rv64imc_zicsr_xqnn prog.elf
+# it into tools/spike.  Use:  spike --isa=rv64imc_zicsr --extension=xqnn prog.elf
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SPIKE_SRC="$ROOT/third_party/riscv-isa-sim"
